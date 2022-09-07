@@ -8,8 +8,6 @@ public class PlayerMovement : MonoBehaviour {
     public float constantStillSpeed;
     Vector2 moveDir = Vector2.zero;
     void Start() {
-        rb.AddForce(new Vector3(0, 0, 3f), ForceMode.Impulse);
-
     }
 
     // Update is called once per frame
@@ -21,15 +19,15 @@ public class PlayerMovement : MonoBehaviour {
 
     private void FixedUpdate() {
         //rb.velocity = new Vector3(moveDir.x * mSpeed, 0, constantStillSpeed);
-        float turnPercentage = 0;
-        if(moveDir.x > 0) {
-            turnPercentage = 1 - moveDir.x;
+        float actualMoveDir = moveDir.x;
+        float turnPercentage;
+        if(actualMoveDir > 0) {
+            turnPercentage = 1 - actualMoveDir;
         } else {
-            turnPercentage = moveDir.x + 1;
+            turnPercentage = actualMoveDir + 1;
         }
-        turnPercentage = turnPercentage > 0.75f ? 0.75f : turnPercentage;
-        transform.rotation = Quaternion.Euler(12.2f, moveDir.x * 45f, 0f);
-        rb.AddForce(new Vector3(moveDir.x * mSpeed, 0, constantStillSpeed * turnPercentage));
-        Debug.Log(turnPercentage);
+        turnPercentage = turnPercentage > 0.05f ? turnPercentage/2 : 0.05f;
+        transform.rotation = Quaternion.Euler(12.2f, actualMoveDir * 45f, 0f);
+        rb.AddForce(new Vector3(actualMoveDir * mSpeed, 0, constantStillSpeed * (turnPercentage + 1)));
     }
 }
