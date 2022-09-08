@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class PlayerMovement : MonoBehaviour {
     public Rigidbody rb;
     public float mSpeed;
@@ -21,8 +20,10 @@ public class PlayerMovement : MonoBehaviour {
     public Transform ellenRightLeg;
     enum State { PRE, STARTED, FINISHED };
     State currentState = State.PRE;
+
+    float actualMoveDir = 0;
+
     void Start() {
-        rb.AddForce(new Vector3(0f, 0f, 0.5f), ForceMode.Impulse);
         SetTimeText(time);
         if (PlayerPrefs.HasKey("HIGHSCORE"))
         {
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour {
             PlayerPrefs.SetString("HIGHSCORE", "0");
         }
         currentState = State.STARTED;
-    }
+    }   
 
     // Update is called once per frame
     void Update() {
@@ -60,7 +61,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void FixedUpdate() {
         //rb.velocity = new Vector3(moveDir.x * mSpeed, 0, constantStillSpeed);
-        float actualMoveDir = Mathf.Lerp(lastMoveX, moveDir.x, 0.03f);
+        actualMoveDir = Mathf.Lerp(lastMoveX, moveDir.x, 0.03f);
         float turnPercentage;
         if (actualMoveDir > 0) {
             turnPercentage = actualMoveDir;
@@ -69,7 +70,7 @@ public class PlayerMovement : MonoBehaviour {
         } else {
             turnPercentage = actualMoveDir - (actualMoveDir*2);
         }
-        transform.rotation = Quaternion.Euler(9.5f, actualMoveDir * 55f, -actualMoveDir * 2f);
+        transform.rotation = Quaternion.Euler(10f, actualMoveDir * 55f, -actualMoveDir * 2f);
         ellenSpine.rotation = Quaternion.Euler(ellenSpine.eulerAngles.x, ellenSpine.eulerAngles.y, (-actualMoveDir * 18f) - 90);
         ellenRightLeg.rotation = Quaternion.Euler(ellenRightLeg.eulerAngles.x, ellenRightLeg.eulerAngles.y, (actualMoveDir * 10f) - 90);
         ellenLeftLeg.rotation = Quaternion.Euler(ellenLeftLeg.eulerAngles.x, ellenLeftLeg.eulerAngles.y, (-actualMoveDir * 10f) + 90);
